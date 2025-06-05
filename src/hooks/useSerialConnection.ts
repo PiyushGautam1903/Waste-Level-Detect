@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
+import '../types/serial.d.ts';
 
 export const useSerialConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
