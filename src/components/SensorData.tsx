@@ -38,7 +38,7 @@ const SensorData = () => {
             <div className="bg-gray-50 p-3 rounded-lg">
               <div className="text-xs text-gray-600 mb-1">Raw Sensor Output:</div>
               <div className="font-mono text-sm text-gray-800 bg-black text-green-400 p-2 rounded">
-                > IR_SENSOR: {sensorReading}cm | STATUS: {isConnected ? 'OK' : 'ERROR'}
+                &gt; IR_SENSOR: {sensorReading}cm | STATUS: {isConnected ? 'OK' : 'ERROR'}
               </div>
             </div>
           </div>
