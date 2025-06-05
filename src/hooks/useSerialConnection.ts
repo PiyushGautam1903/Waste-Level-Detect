@@ -11,19 +11,21 @@ export const useSerialConnection = () => {
   const readerRef = useRef<ReadableStreamDefaultReader | null>(null);
 
   // Check for Web Serial API support
-  const isSerialSupported = 'serial' in navigator;
+  const isSerialSupported = typeof navigator !== 'undefined' && 'serial' in navigator;
 
   useEffect(() => {
-    if (isSerialSupported) {
+    if (isSerialSupported && navigator.serial) {
       // Get already granted ports
       navigator.serial.getPorts().then(ports => {
         setAvailablePorts(ports);
+      }).catch(error => {
+        console.error('Error getting ports:', error);
       });
     }
   }, [isSerialSupported]);
 
   const requestPort = async () => {
-    if (!isSerialSupported) {
+    if (!isSerialSupported || !navigator.serial) {
       toast({
         title: "Serial API Not Supported",
         description: "Your browser doesn't support Web Serial API. Use Chrome/Edge for hardware connection.",
