@@ -29,10 +29,6 @@ interface Serial extends EventTarget {
   requestPort(options?: SerialPortRequestOptions): Promise<SerialPort>;
 }
 
-interface Navigator {
-  serial?: Serial;
-}
-
 declare global {
   interface Navigator {
     serial?: Serial;
