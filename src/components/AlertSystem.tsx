@@ -4,17 +4,17 @@ import { toast } from '@/hooks/use-toast';
 import { useBinData } from '@/hooks/useBinData';
 
 const AlertSystem = () => {
-  const { fillLevel } = useBinData();
+  const { fillLevel, isConnected } = useBinData();
 
   useEffect(() => {
-    if (fillLevel >= 80) {
+    if (isConnected && fillLevel !== null && fillLevel >= 80) {
       toast({
         title: "🚨 Bin Alert!",
         description: `Bin is ${fillLevel}% full. Collection needed soon!`,
         variant: "destructive",
       });
     }
-  }, [fillLevel]);
+  }, [fillLevel, isConnected]);
 
   return null;
 };
