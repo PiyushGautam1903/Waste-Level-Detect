@@ -1,12 +1,13 @@
 
-interface SerialPort {
+// Web Serial API Type Definitions
+export interface SerialPort {
   readonly readable: ReadableStream<Uint8Array> | null;
   readonly writable: WritableStream<Uint8Array> | null;
   open(options: SerialOptions): Promise<void>;
   close(): Promise<void>;
 }
 
-interface SerialOptions {
+export interface SerialOptions {
   baudRate: number;
   dataBits?: number;
   stopBits?: number;
@@ -15,16 +16,16 @@ interface SerialOptions {
   flowControl?: 'none' | 'hardware';
 }
 
-interface SerialPortRequestOptions {
+export interface SerialPortRequestOptions {
   filters?: SerialPortFilter[];
 }
 
-interface SerialPortFilter {
+export interface SerialPortFilter {
   usbVendorId?: number;
   usbProductId?: number;
 }
 
-interface Serial extends EventTarget {
+export interface Serial extends EventTarget {
   getPorts(): Promise<SerialPort[]>;
   requestPort(options?: SerialPortRequestOptions): Promise<SerialPort>;
 }
@@ -34,5 +35,3 @@ declare global {
     serial?: Serial;
   }
 }
-
-export {};
