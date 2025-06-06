@@ -3,9 +3,20 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useBinData } from '@/hooks/useBinData';
+ 
+// Define a prop type for the component
+interface AnalyticsChartProps {
+ data: number[];
+}
+ 
+// Modify the component to accept props
+const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ data }) => {
 
-const AnalyticsChart = () => {
-  const { historicalData } = useBinData();
+  // Transform the incoming data into a format suitable for recharts
+  const chartData = data.map((fillLevel, index) => ({
+    time: new Date().getTime() + index * 1000, // Using index and a simple timestamp for now
+    fillLevel: fillLevel,
+  }));
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300">
@@ -16,7 +27,7 @@ const AnalyticsChart = () => {
       <CardContent>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={historicalData}>
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="time" 

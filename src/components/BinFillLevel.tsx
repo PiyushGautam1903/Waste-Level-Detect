@@ -1,10 +1,15 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useBinData } from '@/hooks/useBinData';
 
-const BinFillLevel = () => {
-  const { fillLevel, status, isConnected } = useBinData();
+interface BinFillLevelProps {
+  fillLevel: number | null;
+  status: string;
+  isConnected: boolean;
+}
+
+const BinFillLevel: React.FC<BinFillLevelProps> = ({ fillLevel, status, isConnected }) => {
+  // Removed useBinData hook and its destructuring
 
   const getStatusColor = (level: number | null) => {
     if (level === null) return 'bg-gray-300';
