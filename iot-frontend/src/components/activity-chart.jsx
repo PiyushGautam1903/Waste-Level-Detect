@@ -41,7 +41,7 @@ export const ActivityChart = ({ fillPercent }) => {
 	const chartData = useMemo(() => data, [data]);
 
 	return (
-		<Card title="Fill Activity" description="Jar fill level over time">
+		<Card title="Fill Activity" description="Waste-Bin fill level over time">
 			<div className="h-64">
 				<ResponsiveContainer width="100%" height="100%">
 					<LineChart data={chartData}>
