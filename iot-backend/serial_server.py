@@ -1,4 +1,4 @@
-# main.py
+# serial_server.py (main.py)
 import asyncio
 import serial
 import websockets
@@ -18,9 +18,9 @@ async def read_sensor_data():
     try:
         arduino = serial.Serial("COM5", 9600, timeout=1)
         await asyncio.sleep(2)
-        print("Connected to Arduino.")
+        print("✅ Connected to Arduino.")
     except serial.SerialException:
-        print("Could not connect to Arduino.")
+        print("❌ Could not connect to Arduino. Check COM port.")
         return
 
     while True:
@@ -28,7 +28,7 @@ async def read_sensor_data():
             line = arduino.readline().decode("utf-8").strip()
             if "Distance" in line:
                 if "Out of range" in line:
-                    raw_distance = 999  # large value to indicate no detection
+                    raw_distance = 999  # Invalid reading
                 else:
                     parts = line.split()
                     raw_distance = float(parts[1])
@@ -36,8 +36,8 @@ async def read_sensor_data():
                 payload = process_distance(raw_distance)
                 await broadcast(json.dumps(payload))
         except Exception as e:
-            print("Error:", e)
-        await asyncio.sleep(1)
+            print("⚠️ Error reading from serial:", e)
+        await asyncio.sleep(0.5)
 
 async def handler(websocket):
     connected_clients.add(websocket)
@@ -47,9 +47,12 @@ async def handler(websocket):
         connected_clients.remove(websocket)
 
 async def main():
-    print("Sensor server started at ws://localhost:8765")
-    await websockets.serve(handler, "localhost", 8765)
-    await read_sensor_data()
+    print("🚀 Sensor WebSocket server starting at ws://localhost:8765")
+    try:
+        async with websockets.serve(handler, "localhost", 8765, ping_interval=None):
+            await read_sensor_data()
+    except Exception as e:
+        print(f"❌ WebSocket server error: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())
