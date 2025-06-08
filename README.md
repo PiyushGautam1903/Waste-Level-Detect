@@ -67,7 +67,7 @@ This project is a full-stack, minimalist setup to monitor the fill level of a wa
 - Interpolated with `lerp()` for smooth transitions
 - Auto-updates in real-time (60s window)
 
-#### 🔹 `ConnectionStatus.jsx`
+#### 🔹 `StatusCard.jsx`
 
 - Shows WebSocket connection status (connected/disconnected)
 - Button to manually connect or disconnect
@@ -94,21 +94,26 @@ python serial_server.py
 # OR for mock testing
 python test_server.py
 ```
+
 ### 🖥 2. Start the Frontend
+
 ```bash
 cd iot-frontend
 npm install
 npm run dev
 ```
+
 | Frontend will start at `http://localhost:5173` and connect to the backend WebSocket.
 
 ## 🏁 Production Deployment
+
 In production, always use the real Arduino-connected backend:
 
 ```bash
 cd iot-backend
 python serial_server.py
 ```
+
 | Use a process manager like pm2, supervisord, or systemd for reliability.
 
 ### Frontend can be built and served statically:
@@ -120,6 +125,7 @@ npx serve dist
 ```
 
 ## 📡 Features
+
 - Real-time fill-level updates from IR sensor
 - WebSocket-based streaming to frontend
 - Adjustable depth recognition if sensor detects new max depth consistently
@@ -127,6 +133,7 @@ npx serve dist
 - Smooth UI with Tailwind CSS
 
 ## 📷 Future Ideas
+
 - Support for multiple bins
 - Export data to CSV
 - Add alerting when bin is nearly empty/full

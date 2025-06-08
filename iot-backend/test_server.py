@@ -1,4 +1,4 @@
-# mock.py
+# test_server.py
 import asyncio
 import websockets
 import json
@@ -16,11 +16,11 @@ async def broadcast(message):
 
 async def send_mock_data():
     while True:
-        # Occasionally simulate slightly larger depth
-        raw_distance = round(random.uniform(0, 25), 2)
+        # Simulate a fluctuating sensor reading
+        raw_distance = round(random.uniform(5, 25), 2)
         payload = process_distance(raw_distance)
         await broadcast(json.dumps(payload))
-        await asyncio.sleep(2)
+        await asyncio.sleep(1.5)
 
 async def handler(websocket):
     connected_clients.add(websocket)
@@ -30,9 +30,12 @@ async def handler(websocket):
         connected_clients.remove(websocket)
 
 async def main():
-    print("Mock server started at ws://localhost:8765")
-    await websockets.serve(handler, "localhost", 8765)
-    await send_mock_data()
+    print("🧪 Mock WebSocket server running at ws://localhost:8765")
+    try:
+        async with websockets.serve(handler, "localhost", 8765, ping_interval=None):
+            await send_mock_data()
+    except Exception as e:
+        print(f"❌ WebSocket server error: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())

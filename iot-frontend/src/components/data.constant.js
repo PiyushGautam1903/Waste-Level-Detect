@@ -1,4 +1,4 @@
-const int trigPin = 9;
+export const ARDUINO_CODE = `const int trigPin = 9;
 const int echoPin = 10;
 
 // You can adjust this based on actual jar/bin height
@@ -63,4 +63,4 @@ void loop() {
   }
 
   delay(500);  // Sample every 0.5 seconds
-}
+}`;

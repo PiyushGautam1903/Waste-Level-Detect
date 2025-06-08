@@ -1,7 +1,10 @@
+# utils.py
+
 MAX_DEFAULT_DEPTH = 22.5
 _depth_override_threshold = 3
 new_depth_counter = 0
 max_depth = MAX_DEFAULT_DEPTH
+
 
 def process_distance(raw_distance):
     global max_depth, new_depth_counter
@@ -14,11 +17,11 @@ def process_distance(raw_distance):
     else:
         new_depth_counter = 0
 
-    # Clamp raw_distance to current max_depth
+    # Clamp to max depth
     distance = min(raw_distance, max_depth)
     fill_percent = max(0, min(100, ((max_depth - distance) / max_depth) * 100))
 
-    print(f"Processed distance: {distance}, Max depth: {max_depth}, Fill percent: {fill_percent:.1f}%")
+    print(f"[INFO] Distance: {distance} cm | Max Depth: {max_depth} cm | Fill: {fill_percent:.1f}%")
 
     return {
         "distance": round(distance, 2),
