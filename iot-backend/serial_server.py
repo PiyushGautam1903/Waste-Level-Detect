@@ -27,14 +27,20 @@ async def read_sensor_data():
         try:
             line = arduino.readline().decode("utf-8").strip()
             if "Distance" in line:
-                if "Out of range" in line:
-                    raw_distance = 999  # Invalid reading
-                else:
-                    parts = line.split()
+                parts = line.split()
+                try:
                     raw_distance = float(parts[1])
 
-                payload = process_distance(raw_distance)
-                await broadcast(json.dumps(payload))
+                    # 👇 New logic to clamp unrealistic values
+                    if raw_distance > 35:
+                        print(f"⚠️ Unrealistic distance ({raw_distance} cm) detected. Using fallback value (30 cm).")
+                        raw_distance = 30
+
+                    payload = process_distance(raw_distance)
+                    await broadcast(json.dumps(payload))
+
+                except ValueError:
+                    print(f"⚠️ Skipping invalid distance reading: {parts[1]}")
         except Exception as e:
             print("⚠️ Error reading from serial:", e)
         await asyncio.sleep(0.5)

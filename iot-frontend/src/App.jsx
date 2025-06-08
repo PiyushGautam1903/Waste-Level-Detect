@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { FillLevelBar } from "./components/fill-level-bar";
 import { ActivityChart } from "./components/activity-chart";
 import { StatusCard } from "./components/status-card";
+import { Header } from "./components/header";
 
 function App() {
 	const socketRef = useRef(null);
@@ -47,14 +48,17 @@ function App() {
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col gap-6 bg-gray-100 p-6">
-			<h1 className="text-5xl font-medium">Waste Bin Fill Level Detector</h1>
-			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-				<div className="flex flex-col gap-6">
-					<FillLevelBar fillPercent={data.fill_percent} />
-					<ActivityChart fillPercent={data.fill_percent} />
+		<div className="min-h-screen flex flex-col gap-2">
+			<Header />
+			<div className="container flex flex-col gap-6 p-6">
+				<h1 className="text-3xl font-medium">Smart Bin Monitoring Dashboard</h1>
+				<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div className="flex flex-col gap-6">
+						<FillLevelBar fillPercent={data.fill_percent} />
+						<ActivityChart fillPercent={data.fill_percent} />
+					</div>
+					<StatusCard connected={isConnected} onConnect={connectWebSocket} />
 				</div>
-				<StatusCard connected={isConnected} onConnect={connectWebSocket} />
 			</div>
 		</div>
 	);

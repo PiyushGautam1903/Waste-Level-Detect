@@ -1,6 +1,6 @@
 # utils.py
 
-MAX_DEFAULT_DEPTH = 22.5
+MAX_DEFAULT_DEPTH = 30
 _depth_override_threshold = 3
 new_depth_counter = 0
 max_depth = MAX_DEFAULT_DEPTH

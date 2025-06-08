@@ -20,7 +20,7 @@ export const ConnectionAccordion = () => {
 						<li>Device: Arduino Uno</li>
 						<li>Sensor: HC-SR04 Ultrasonic</li>
 						<li>Connection via Serial at 9600 baud</li>
-						<li>Max Height: 22.5 cm</li>
+						<li>Max Height: 30 cm</li>
 					</ul>
 				</Accordion.Content>
 			</Accordion.Item>
