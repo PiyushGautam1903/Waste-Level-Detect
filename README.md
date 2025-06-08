@@ -1,73 +1,134 @@
-# Welcome to your Lovable project
+# Waste Bin Fill Level Monitor – IOT + Web App
 
-## Project info
+This project is a full-stack, minimalist setup to monitor the fill level of a waste-bin using an IR distance sensor connected to an Arduino. The backend reads sensor data via serial port (or mock test mode), and serves it through a WebSocket API to a frontend built with React + Vite. The frontend visualizes fill status, live updates, and historical activity.
 
-**URL**: https://lovable.dev/projects/22b1c6c7-9f7b-4991-9811-78611e043919
+---
 
-## How can I edit this code?
+## 📁 Project Structure
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🔌 IOT Backend
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/22b1c6c7-9f7b-4991-9811-78611e043919) and start prompting.
+### 1. **arduino_code.ino**
 
-Changes made via Lovable will be committed automatically to this repo.
+- Arduino sketch that:
+  - Uses an IR sensor on analog pin `A0`
+  - Reads sensor value and converts it to estimated distance (in cm)
+  - Sends distance over serial every 5 seconds
+  - Sensor is installed on waste-bin lid to measure distance to fill level
 
-**Use your preferred IDE**
+### 2. **serial_server.py**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Python backend to:
+  - Read from serial port (e.g. `COM5` or `/dev/ttyUSB0`)
+  - Converts distance into fill-level data
+  - Automatically adapts to new waste-bin depths (after 3 consistent longer readings)
+  - Exposes data via WebSocket for frontend consumption
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 3. **test_server.py**
 
-Follow these steps:
+- Mock version of backend for development:
+  - Sends fake sensor readings with realistic patterns
+  - Useful for testing frontend without Arduino hardware
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 4. **utils.py**
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Shared helper functions:
+  - Sensor value smoothing
+  - Fill level computation
+  - Depth tracking logic
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🧩 Frontend (Vite + React + Tailwind CSS)
+
+### `App.jsx`
+
+- Main layout using flex/grid
+- Renders all cards: Fill level, activity chart, connection status
+
+### `components/`
+
+#### 🔹 `Card.jsx`
+
+- Reusable card wrapper with title and description
+- Used for layout consistency
+
+#### 🔹 `FillLevelBar.jsx`
+
+- Displays vertical fill status bar
+- Uses percentage to compute fill height
+- Smooth animation and label for current fill
+
+#### 🔹 `ActivityChart.jsx`
+
+- Line chart showing fill level over time
+- Interpolated with `lerp()` for smooth transitions
+- Auto-updates in real-time (60s window)
+
+#### 🔹 `ConnectionStatus.jsx`
+
+- Shows WebSocket connection status (connected/disconnected)
+- Button to manually connect or disconnect
+
+---
+
+## 🚀 Running the Project
+
+### ✅ Requirements
+
+- **Python 3.9+**
+- **Node.js 18+**
+- Arduino IDE (for flashing device)
+
+---
+
+### 🖥 1. Start the Backend
+
+```bash
+cd iot-backend
+# For real hardware
+python serial_server.py
+
+# OR for mock testing
+python test_server.py
+```
+### 🖥 2. Start the Frontend
+```bash
+cd iot-frontend
+npm install
 npm run dev
 ```
+| Frontend will start at `http://localhost:5173` and connect to the backend WebSocket.
 
-**Edit a file directly in GitHub**
+## 🏁 Production Deployment
+In production, always use the real Arduino-connected backend:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+cd iot-backend
+python serial_server.py
+```
+| Use a process manager like pm2, supervisord, or systemd for reliability.
 
-**Use GitHub Codespaces**
+### Frontend can be built and served statically:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+cd iot-frontend
+npm run build
+npx serve dist
+```
 
-## What technologies are used for this project?
+## 📡 Features
+- Real-time fill-level updates from IR sensor
+- WebSocket-based streaming to frontend
+- Adjustable depth recognition if sensor detects new max depth consistently
+- Chart-based historical tracking
+- Smooth UI with Tailwind CSS
 
-This project is built with:
+## 📷 Future Ideas
+- Support for multiple bins
+- Export data to CSV
+- Add alerting when bin is nearly empty/full
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/22b1c6c7-9f7b-4991-9811-78611e043919) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**🛠️ Built with ❤️ using Arduino, Python, WebSockets, and React.**
