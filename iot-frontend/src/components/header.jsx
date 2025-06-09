@@ -4,7 +4,7 @@ import { Bell } from "lucide-react";
 export function Header() {
   return (
     <header className="border-b border-gray-300 shadow-sm bg-background/80 backdrop-blur-sm sticky top-0 z-10 px-6">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="max-w-[1400px] w-full mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full eco-gradient flex items-center justify-center bg-green-500 text-white">

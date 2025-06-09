@@ -60,7 +60,7 @@ export const ActivityChart = ({ fillPercent }) => {
 				</ResponsiveContainer>
 			</div>
 			<p className="text-xs text-gray-500 text-center mt-1">
-				Showing last 60 seconds (updated every 0.5s)
+				Showing last 60 seconds (updated every 2s)
 			</p>
 		</Card>
 	);

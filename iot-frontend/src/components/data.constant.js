@@ -1,12 +1,12 @@
 export const ARDUINO_CODE = `const int trigPin = 9;
 const int echoPin = 10;
 
-// You can adjust this based on actual jar/bin height
-const float wasteBinHeight = 22.5;  // in cm
+const float wasteBinHeight = 30;  // in cm
 
 long duration = 0;
 float distanceCM = 0;
 float fillLevel = 0;
+float previousDistance = wasteBinHeight;
 
 void setup() {
   pinMode(trigPin, OUTPUT);
@@ -15,7 +15,6 @@ void setup() {
 }
 
 void loop() {
-  // --- Take multiple samples for smoothing ---
   float totalDistance = 0;
   const int samples = 5;
 
@@ -27,40 +26,30 @@ void loop() {
     digitalWrite(trigPin, LOW);
 
     duration = pulseIn(echoPin, HIGH, 30000);  // Timeout after 30ms (~5m range)
-    float singleDistance = duration * 0.0343 / 2;  // Convert to cm
+    float singleDistance = duration * 0.0343 / 2;
+
+    // --- Clamp out weird low-range jumps (like 800+ cm)
+    if (singleDistance > 2 * wasteBinHeight && previousDistance < 2) {
+      singleDistance = 0;  // Object too close, treat as "blocked"
+    }
 
     totalDistance += singleDistance;
-    delay(50);  // Small delay between readings
+    delay(50);
   }
 
-  // --- Calculate average distance ---
   distanceCM = totalDistance / samples;
+  previousDistance = distanceCM;
 
-  // --- Check if distance is within expected range ---
-  if (distanceCM < 0 || distanceCM > wasteBinHeight) {
-    distanceCM = -1;
-    fillLevel = -1;
-  } else {
-    fillLevel = 100.0 * (wasteBinHeight - distanceCM) / wasteBinHeight;
-    fillLevel = constrain(fillLevel, 0, 100);  // Clamp to 0–100%
-  }
+  // --- Calculate fill level (but not applying logic)
+  fillLevel = 100.0 * (wasteBinHeight - distanceCM) / wasteBinHeight;
+  fillLevel = constrain(fillLevel, 0, 100);  // Clamp to 0–100%
 
-  // --- Serial Output ---
+  // --- Clean Serial Output ---
   Serial.print("Distance: ");
-  if (distanceCM == -1) {
-    Serial.println("Out of range");
-  } else {
-    Serial.print(distanceCM, 2);
-    Serial.println(" cm");
-  }
-
+  Serial.println(distanceCM, 2);  // Always float
   Serial.print("Fill level: ");
-  if (fillLevel == -1) {
-    Serial.println("Invalid");
-  } else {
-    Serial.print(fillLevel, 1);
-    Serial.println(" %");
-  }
+  Serial.println(fillLevel, 1);  // Always float
 
-  delay(500);  // Sample every 0.5 seconds
-}`;
+  delay(2000);
+}
+`;
