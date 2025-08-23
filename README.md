@@ -1,6 +1,6 @@
 # Waste Bin Fill Level Monitor – IOT + Web App
 
-This project is a full-stack, minimalist setup to monitor the fill level of a waste-bin using an IR distance sensor connected to an Arduino. The backend reads sensor data via serial port (or mock test mode), and serves it through a WebSocket API to a frontend built with React + Vite. The frontend visualizes fill status, live updates, and historical activity.
+This project is a full-stack, minimalist setup to monitor the fill level of a waste-bin using an Ultrasonic sensor connected to an Arduino. The backend reads sensor data via serial port (or mock test mode), and serves it through a WebSocket API to a frontend built with React + Vite. The frontend visualizes fill status, live updates, and historical activity.
 
 ---
 
